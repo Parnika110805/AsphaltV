@@ -3,7 +3,7 @@ from flask import Flask, request, jsonify
 from ultralytics import YOLO
 from PIL import Image
 
-SUPABASE_URL = "https://cxkojfhujepehbdhxiqq.supabase.co"
+SUPABASE_URL = ""
 SUPABASE_KEY = ""
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
