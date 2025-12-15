@@ -1,6 +1,6 @@
 from supabase import create_client
 
-url = "https://cxkojfhujepehbdhxiqq.supabase.co"
+url = ""
 key = ""
 supabase = create_client(url, key)
 
