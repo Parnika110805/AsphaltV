@@ -24,6 +24,8 @@ def predict():
     fleet = request.form.get("fleet", "demo_vehicle")
 
     results = model(img)
+
+    # Base confidence (fallback for non-pothole-trained model)
     max_confidence = 0.15
 
     for r in results:
@@ -31,13 +33,14 @@ def predict():
             conf = float(box.conf[0])
             max_confidence = max(max_confidence, conf)
 
-
     grid_id = compute_grid(lat, lon)
 
     existing = (
         supabase.table("defects")
         .select("*")
         .eq("grid_id", grid_id)
+        .order("created_at", desc=True)
+        .limit(1)
         .execute()
     )
 
@@ -46,20 +49,32 @@ def predict():
         new_count = record["confirmation_count"] + 1
         confirmed = new_count >= 2
 
+        risk_score = round(
+            (max_confidence * 0.6) + (new_count * 0.4),
+            2
+        )
+
         supabase.table("defects").update({
             "confirmation_count": new_count,
             "is_confirmed": confirmed,
-            "confidence": max(record["confidence"], max_confidence)
+            "confidence": max(record["confidence"], max_confidence),
+            "risk_score": risk_score
         }).eq("id", record["id"]).execute()
 
         status = "VERIFIED" if confirmed else "PENDING"
 
     else:
+        risk_score = round(
+            (max_confidence * 0.6) + (1 * 0.4),
+            2
+        )
+
         supabase.table("defects").insert({
             "defect_type": "road_anomaly",
             "latitude": lat,
             "longitude": lon,
             "confidence": max_confidence,
+            "risk_score": risk_score,
             "source_fleet": fleet,
             "grid_id": grid_id,
             "confirmation_count": 1,
@@ -71,6 +86,7 @@ def predict():
     return jsonify({
         "grid_id": grid_id,
         "confidence": max_confidence,
+        "risk_score": risk_score,
         "status": status
     })
 
