@@ -4,7 +4,7 @@ from ultralytics import YOLO
 from PIL import Image
 
 SUPABASE_URL = ""
-SUPABASE_KEY = ""
+SUPABASE_KEY= ""
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 app = Flask(__name__)
@@ -24,15 +24,13 @@ def predict():
     fleet = request.form.get("fleet", "demo_vehicle")
 
     results = model(img)
-    max_confidence = 0.0
+    max_confidence = 0.15
 
     for r in results:
         for box in r.boxes:
             conf = float(box.conf[0])
             max_confidence = max(max_confidence, conf)
 
-    if max_confidence == 0:
-        return jsonify({"message": "No defect detected"}), 200
 
     grid_id = compute_grid(lat, lon)
 
