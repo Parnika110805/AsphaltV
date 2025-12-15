@@ -1,12 +1,12 @@
-# VisionScan – Fleet Consensus Road Risk Intelligence
+# AsphaltV – Fleet Consensus Road Risk Intelligence
 
-VisionScan is an AI-powered smart city system that detects and validates road defects using multi-fleet consensus to improve trust and prioritization.
+AsphaltV is an AI-powered smart city system that detects and validates road defects using multi-fleet consensus to improve trust and prioritization.
 
 ## Problem
 Cities rely on manual complaints or single-source detection, leading to unreliable road maintenance decisions.
 
 ## Solution
-VisionScan uses computer vision to detect road defects and validates them only when confirmed by multiple independent fleets.
+AsphaltV uses computer vision to detect road defects and validates them only when confirmed by multiple independent fleets.
 
 ## Features
 - AI-based pothole detection (YOLO)
